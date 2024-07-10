@@ -2,12 +2,11 @@
 
 namespace Account.Profile;
 
-public class Endpoint : EndpointWithoutRequest
+public class Endpoint : Endpoint<EmptyRequest>
 {
     public override void Configure()
     {
         Get("/account/profile");
-        PermissionsAll("Profile_Read", "Profile_Update");
     }
 
     public override async Task HandleAsync(EmptyRequest req, CancellationToken ct)
