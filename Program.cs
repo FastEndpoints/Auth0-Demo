@@ -2,24 +2,23 @@ global using FastEndpoints;
 using FastEndpoints.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
-var builder = WebApplication.CreateBuilder();
-builder.Services.AddOptions();
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.Authority = $"https://{builder.Configuration["Auth0:Domain"]}/";
-        options.Audience = builder.Configuration["Auth0:Audience"];
-    });
-builder.Services
-    .AddAuthorization()
-    .AddFastEndpoints()
-    .SwaggerDocument();
+var bld = WebApplication.CreateBuilder();
+bld.Services
+   .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+   .AddJwtBearer(
+       o =>
+       {
+           o.Authority = $"https://{bld.Configuration["Auth0:Domain"]}/";
+           o.Audience = bld.Configuration["Auth0:Audience"];
+       });
+bld.Services
+   .AddAuthorization()
+   .AddFastEndpoints()
+   .SwaggerDocument();
 
-var app = builder.Build();
-
+var app = bld.Build();
 app.UseAuthentication()
-    .UseAuthorization()
-    .UseFastEndpoints()
-    .UseSwaggerGen();
-
+   .UseAuthorization()
+   .UseFastEndpoints()
+   .UseSwaggerGen();
 app.Run();
